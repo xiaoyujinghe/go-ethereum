@@ -206,24 +206,24 @@ func prune(snaptree *snapshot.Tree, root common.Hash, maindb ethdb.Database, sta
 
 	// Start compactions, will remove the deleted data from the disk immediately.
 	// Note for small pruning, the compaction is skipped.
-	if count >= rangeCompactionThreshold {
-		cstart := time.Now()
-		for b := 0x00; b <= 0xf0; b += 0x10 {
-			var (
-				start = []byte{byte(b)}
-				end   = []byte{byte(b + 0x10)}
-			)
-			if b == 0xf0 {
-				end = nil
-			}
-			log.Info("Compacting database", "range", fmt.Sprintf("%#x-%#x", start, end), "elapsed", common.PrettyDuration(time.Since(cstart)))
-			if err := maindb.Compact(start, end); err != nil {
-				log.Error("Database compaction failed", "error", err)
-				return err
-			}
-		}
-		log.Info("Database compaction finished", "elapsed", common.PrettyDuration(time.Since(cstart)))
-	}
+	// if count >= rangeCompactionThreshold {
+	// 	cstart := time.Now()
+	// 	for b := 0x00; b <= 0xf0; b += 0x10 {
+	// 		var (
+	// 			start = []byte{byte(b)}
+	// 			end   = []byte{byte(b + 0x10)}
+	// 		)
+	// 		if b == 0xf0 {
+	// 			end = nil
+	// 		}
+	// 		log.Info("Compacting database", "range", fmt.Sprintf("%#x-%#x", start, end), "elapsed", common.PrettyDuration(time.Since(cstart)))
+	// 		if err := maindb.Compact(start, end); err != nil {
+	// 			log.Error("Database compaction failed", "error", err)
+	// 			return err
+	// 		}
+	// 	}
+	// 	log.Info("Database compaction finished", "elapsed", common.PrettyDuration(time.Since(cstart)))
+	// }
 	log.Info("State pruning successful", "pruned", size, "elapsed", common.PrettyDuration(time.Since(start)))
 	return nil
 }

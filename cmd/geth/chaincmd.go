@@ -297,7 +297,7 @@ func importChain(ctx *cli.Context) error {
 	fmt.Printf("Import done in %v.\n\n", time.Since(start))
 
 	// Output pre-compaction stats mostly to see the import trashing
-	showLeveldbStats(db)
+	// showLeveldbStats(db)
 
 	// Print the memory statistics used by the importing
 	mem := new(runtime.MemStats)
@@ -314,13 +314,13 @@ func importChain(ctx *cli.Context) error {
 
 	// Compact the entire database to more accurately measure disk io and print the stats
 	start = time.Now()
-	fmt.Println("Compacting entire database...")
-	if err := db.Compact(nil, nil); err != nil {
-		utils.Fatalf("Compaction failed: %v", err)
-	}
-	fmt.Printf("Compaction done in %v.\n\n", time.Since(start))
+	// fmt.Println("Compacting entire database...")
+	// if err := db.Compact(nil, nil); err != nil {
+	// 	utils.Fatalf("Compaction failed: %v", err)
+	// }
+	// fmt.Printf("Compaction done in %v.\n\n", time.Since(start))
 
-	showLeveldbStats(db)
+	// showLeveldbStats(db)
 	return importErr
 }
 

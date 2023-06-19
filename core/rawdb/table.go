@@ -120,9 +120,9 @@ func (t *table) MigrateTable(kind string, convert convertLegacyFn) error {
 }
 
 // AncientDatadir returns the ancient datadir of the underlying database.
-func (t *table) AncientDatadir() (string, error) {
-	return t.db.AncientDatadir()
-}
+// func (t *table) AncientDatadir() (string, error) {
+// 	return "", nil
+// }
 
 // Put inserts the given value into the database at a prefixed version of the
 // provided key.
@@ -148,9 +148,9 @@ func (t *table) NewIterator(prefix []byte, start []byte) ethdb.Iterator {
 }
 
 // Stat returns a particular internal stat of the database.
-func (t *table) Stat(property string) (string, error) {
-	return t.db.Stat(property)
-}
+// func (t *table) Stat(property string) (string, error) {
+// 	return t.db.Stat(property)
+// }
 
 // Compact flattens the underlying data store for the given key range. In essence,
 // deleted and overwritten versions are discarded, and the data is rearranged to
@@ -159,34 +159,34 @@ func (t *table) Stat(property string) (string, error) {
 // A nil start is treated as a key before all keys in the data store; a nil limit
 // is treated as a key after all keys in the data store. If both is nil then it
 // will compact entire data store.
-func (t *table) Compact(start []byte, limit []byte) error {
-	// If no start was specified, use the table prefix as the first value
-	if start == nil {
-		start = []byte(t.prefix)
-	} else {
-		start = append([]byte(t.prefix), start...)
-	}
-	// If no limit was specified, use the first element not matching the prefix
-	// as the limit
-	if limit == nil {
-		limit = []byte(t.prefix)
-		for i := len(limit) - 1; i >= 0; i-- {
-			// Bump the current character, stopping if it doesn't overflow
-			limit[i]++
-			if limit[i] > 0 {
-				break
-			}
-			// Character overflown, proceed to the next or nil if the last
-			if i == 0 {
-				limit = nil
-			}
-		}
-	} else {
-		limit = append([]byte(t.prefix), limit...)
-	}
-	// Range correctly calculated based on table prefix, delegate down
-	return t.db.Compact(start, limit)
-}
+// func (t *table) Compact(start []byte, limit []byte) error {
+// 	// If no start was specified, use the table prefix as the first value
+// 	if start == nil {
+// 		start = []byte(t.prefix)
+// 	} else {
+// 		start = append([]byte(t.prefix), start...)
+// 	}
+// 	// If no limit was specified, use the first element not matching the prefix
+// 	// as the limit
+// 	if limit == nil {
+// 		limit = []byte(t.prefix)
+// 		for i := len(limit) - 1; i >= 0; i-- {
+// 			// Bump the current character, stopping if it doesn't overflow
+// 			limit[i]++
+// 			if limit[i] > 0 {
+// 				break
+// 			}
+// 			// Character overflown, proceed to the next or nil if the last
+// 			if i == 0 {
+// 				limit = nil
+// 			}
+// 		}
+// 	} else {
+// 		limit = append([]byte(t.prefix), limit...)
+// 	}
+// 	// Range correctly calculated based on table prefix, delegate down
+// 	return t.db.Compact(start, limit)
+// }
 
 // NewBatch creates a write-only database that buffers changes to its host db
 // until a final write is called, each operation prefixing all keys with the
@@ -203,9 +203,9 @@ func (t *table) NewBatchWithSize(size int) ethdb.Batch {
 // NewSnapshot creates a database snapshot based on the current state.
 // The created snapshot will not be affected by all following mutations
 // happened on the database.
-func (t *table) NewSnapshot() (ethdb.Snapshot, error) {
-	return t.db.NewSnapshot()
-}
+// func (t *table) NewSnapshot() (ethdb.Snapshot, error) {
+// 	return t.db.NewSnapshot()
+// }
 
 // tableBatch is a wrapper around a database batch that prefixes each key access
 // with a pre-configured string.

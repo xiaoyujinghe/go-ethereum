@@ -14,23 +14,34 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with the go-ethereum library. If not, see <http://www.gnu.org/licenses/>.
 
-package leveldb
+package postgresql
 
 import (
+	"fmt"
 	"testing"
+
+	"database/sql"
 
 	"github.com/ethereum/go-ethereum/ethdb"
 	"github.com/ethereum/go-ethereum/ethdb/dbtest"
-	"github.com/syndtr/goleveldb/leveldb"
-	"github.com/syndtr/goleveldb/leveldb/storage"
+	_ "github.com/lib/pq"
 )
 
-func TestLevelDB(t *testing.T) {
+func TestPG(t *testing.T) {
 	t.Run("DatabaseSuite", func(t *testing.T) {
 		dbtest.TestDatabaseSuite(t, func() ethdb.KeyValueStore {
-			db, err := leveldb.Open(storage.NewMemStorage(), nil)
+			db, err := sql.Open("postgres", "host=127.0.0.1 port=5433 user=postgres password=073019 sslmode=disable")
+			db.Exec("\\c ethereum")
+			db.Exec("drop table kvs")
+			db.Exec("create table kvs (key char(20), value char(20))")
+			// db.Exec("create index key on kvs (key)")
+
 			if err != nil {
 				t.Fatal(err)
+				fmt.Println("Open ERROR1")
+			}
+			if db == nil {
+				fmt.Println("Open ERROR2")
 			}
 			return &Database{
 				db: db,
@@ -39,9 +50,13 @@ func TestLevelDB(t *testing.T) {
 	})
 }
 
-func BenchmarkLevelDB(b *testing.B) {
+func BenchmarkPG(b *testing.B) {
 	dbtest.BenchDatabaseSuite(b, func() ethdb.KeyValueStore {
-		db, err := leveldb.Open(storage.NewMemStorage(), nil)
+		db, err := sql.Open("postgres", "host=127.0.0.1 port=5433 user=postgres password=073019 sslmode=disable")
+		db.Exec("\\c ethereum")
+		db.Exec("drop table kvs")
+		db.Exec("create table kvs (key char(20), value char(20))")
+		db.Exec("create index key on kvs (key)")
 		if err != nil {
 			b.Fatal(err)
 		}

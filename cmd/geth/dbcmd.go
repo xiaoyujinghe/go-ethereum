@@ -23,7 +23,6 @@ import (
 	"os/signal"
 	"path/filepath"
 	"strconv"
-	"strings"
 	"syscall"
 	"time"
 
@@ -33,7 +32,6 @@ import (
 	"github.com/ethereum/go-ethereum/console/prompt"
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/core/state/snapshot"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethdb"
 	"github.com/ethereum/go-ethereum/internal/flags"
 	"github.com/ethereum/go-ethereum/log"
@@ -57,40 +55,40 @@ Remove blockchain and state databases`,
 		Usage:     "Low level database operations",
 		ArgsUsage: "",
 		Subcommands: []*cli.Command{
-			dbInspectCmd,
+			// dbInspectCmd,
 			dbStatCmd,
-			dbCompactCmd,
+			// dbCompactCmd,
 			dbGetCmd,
 			dbDeleteCmd,
 			dbPutCmd,
 			dbGetSlotsCmd,
 			dbDumpFreezerIndex,
 			dbImportCmd,
-			dbExportCmd,
+			// dbExportCmd,
 			dbMetadataCmd,
-			dbCheckStateContentCmd,
+			// dbCheckStateContentCmd,
 		},
 	}
-	dbInspectCmd = &cli.Command{
-		Action:    inspect,
-		Name:      "inspect",
-		ArgsUsage: "<prefix> <start>",
-		Flags: flags.Merge([]cli.Flag{
-			utils.SyncModeFlag,
-		}, utils.NetworkFlags, utils.DatabasePathFlags),
-		Usage:       "Inspect the storage size for each type of data in the database",
-		Description: `This commands iterates the entire database. If the optional 'prefix' and 'start' arguments are provided, then the iteration is limited to the given subset of data.`,
-	}
-	dbCheckStateContentCmd = &cli.Command{
-		Action:    checkStateContent,
-		Name:      "check-state-content",
-		ArgsUsage: "<start (optional)>",
-		Flags:     flags.Merge(utils.NetworkFlags, utils.DatabasePathFlags),
-		Usage:     "Verify that state data is cryptographically correct",
-		Description: `This command iterates the entire database for 32-byte keys, looking for rlp-encoded trie nodes.
-For each trie node encountered, it checks that the key corresponds to the keccak256(value). If this is not true, this indicates
-a data corruption.`,
-	}
+	// 	dbInspectCmd = &cli.Command{
+	// 		Action:    inspect,
+	// 		Name:      "inspect",
+	// 		ArgsUsage: "<prefix> <start>",
+	// 		Flags: flags.Merge([]cli.Flag{
+	// 			utils.SyncModeFlag,
+	// 		}, utils.NetworkFlags, utils.DatabasePathFlags),
+	// 		Usage:       "Inspect the storage size for each type of data in the database",
+	// 		Description: `This commands iterates the entire database. If the optional 'prefix' and 'start' arguments are provided, then the iteration is limited to the given subset of data.`,
+	// 	}
+	// 	dbCheckStateContentCmd = &cli.Command{
+	// 		Action:    checkStateContent,
+	// 		Name:      "check-state-content",
+	// 		ArgsUsage: "<start (optional)>",
+	// 		Flags:     flags.Merge(utils.NetworkFlags, utils.DatabasePathFlags),
+	// 		Usage:     "Verify that state data is cryptographically correct",
+	// 		Description: `This command iterates the entire database for 32-byte keys, looking for rlp-encoded trie nodes.
+	// For each trie node encountered, it checks that the key corresponds to the keccak256(value). If this is not true, this indicates
+	// a data corruption.`,
+	// 	}
 	dbStatCmd = &cli.Command{
 		Action: dbStats,
 		Name:   "stats",
@@ -99,19 +97,19 @@ a data corruption.`,
 			utils.SyncModeFlag,
 		}, utils.NetworkFlags, utils.DatabasePathFlags),
 	}
-	dbCompactCmd = &cli.Command{
-		Action: dbCompact,
-		Name:   "compact",
-		Usage:  "Compact leveldb database. WARNING: May take a very long time",
-		Flags: flags.Merge([]cli.Flag{
-			utils.SyncModeFlag,
-			utils.CacheFlag,
-			utils.CacheDatabaseFlag,
-		}, utils.NetworkFlags, utils.DatabasePathFlags),
-		Description: `This command performs a database compaction. 
-WARNING: This operation may take a very long time to finish, and may cause database
-corruption if it is aborted during execution'!`,
-	}
+	// 	dbCompactCmd = &cli.Command{
+	// 		Action: dbCompact,
+	// 		Name:   "compact",
+	// 		Usage:  "Compact leveldb database. WARNING: May take a very long time",
+	// 		Flags: flags.Merge([]cli.Flag{
+	// 			utils.SyncModeFlag,
+	// 			utils.CacheFlag,
+	// 			utils.CacheDatabaseFlag,
+	// 		}, utils.NetworkFlags, utils.DatabasePathFlags),
+	// 		Description: `This command performs a database compaction.
+	// WARNING: This operation may take a very long time to finish, and may cause database
+	// corruption if it is aborted during execution'!`,
+	// 	}
 	dbGetCmd = &cli.Command{
 		Action:    dbGet,
 		Name:      "get",
@@ -174,16 +172,16 @@ WARNING: This is a low-level operation which may cause database corruption!`,
 		}, utils.NetworkFlags, utils.DatabasePathFlags),
 		Description: "The import command imports the specific chain data from an RLP encoded stream.",
 	}
-	dbExportCmd = &cli.Command{
-		Action:    exportChaindata,
-		Name:      "export",
-		Usage:     "Exports the chain data into an RLP dump. If the <dumpfile> has .gz suffix, gzip compression will be used.",
-		ArgsUsage: "<type> <dumpfile>",
-		Flags: flags.Merge([]cli.Flag{
-			utils.SyncModeFlag,
-		}, utils.NetworkFlags, utils.DatabasePathFlags),
-		Description: "Exports the specified chain data to an RLP encoded stream, optionally gzip-compressed.",
-	}
+	// dbExportCmd = &cli.Command{
+	// 	Action:    exportChaindata,
+	// 	Name:      "export",
+	// 	Usage:     "Exports the chain data into an RLP dump. If the <dumpfile> has .gz suffix, gzip compression will be used.",
+	// 	ArgsUsage: "<type> <dumpfile>",
+	// 	Flags: flags.Merge([]cli.Flag{
+	// 		utils.SyncModeFlag,
+	// 	}, utils.NetworkFlags, utils.DatabasePathFlags),
+	// 	Description: "Exports the specified chain data to an RLP encoded stream, optionally gzip-compressed.",
+	// }
 	dbMetadataCmd = &cli.Command{
 		Action: showMetaData,
 		Name:   "metadata",
@@ -255,90 +253,90 @@ func confirmAndRemoveDB(database string, kind string) {
 	}
 }
 
-func inspect(ctx *cli.Context) error {
-	var (
-		prefix []byte
-		start  []byte
-	)
-	if ctx.NArg() > 2 {
-		return fmt.Errorf("max 2 arguments: %v", ctx.Command.ArgsUsage)
-	}
-	if ctx.NArg() >= 1 {
-		if d, err := hexutil.Decode(ctx.Args().Get(0)); err != nil {
-			return fmt.Errorf("failed to hex-decode 'prefix': %v", err)
-		} else {
-			prefix = d
-		}
-	}
-	if ctx.NArg() >= 2 {
-		if d, err := hexutil.Decode(ctx.Args().Get(1)); err != nil {
-			return fmt.Errorf("failed to hex-decode 'start': %v", err)
-		} else {
-			start = d
-		}
-	}
-	stack, _ := makeConfigNode(ctx)
-	defer stack.Close()
+// func inspect(ctx *cli.Context) error {
+// 	var (
+// 		prefix []byte
+// 		start  []byte
+// 	)
+// 	if ctx.NArg() > 2 {
+// 		return fmt.Errorf("max 2 arguments: %v", ctx.Command.ArgsUsage)
+// 	}
+// 	if ctx.NArg() >= 1 {
+// 		if d, err := hexutil.Decode(ctx.Args().Get(0)); err != nil {
+// 			return fmt.Errorf("failed to hex-decode 'prefix': %v", err)
+// 		} else {
+// 			prefix = d
+// 		}
+// 	}
+// 	if ctx.NArg() >= 2 {
+// 		if d, err := hexutil.Decode(ctx.Args().Get(1)); err != nil {
+// 			return fmt.Errorf("failed to hex-decode 'start': %v", err)
+// 		} else {
+// 			start = d
+// 		}
+// 	}
+// 	stack, _ := makeConfigNode(ctx)
+// 	defer stack.Close()
 
-	db := utils.MakeChainDatabase(ctx, stack, true)
-	defer db.Close()
+// 	db := utils.MakeChainDatabase(ctx, stack, true)
+// 	defer db.Close()
 
-	return rawdb.InspectDatabase(db, prefix, start)
-}
+// 	return rawdb.InspectDatabase(db, prefix, start)
+// }
 
-func checkStateContent(ctx *cli.Context) error {
-	var (
-		prefix []byte
-		start  []byte
-	)
-	if ctx.NArg() > 1 {
-		return fmt.Errorf("max 1 argument: %v", ctx.Command.ArgsUsage)
-	}
-	if ctx.NArg() > 0 {
-		if d, err := hexutil.Decode(ctx.Args().First()); err != nil {
-			return fmt.Errorf("failed to hex-decode 'start': %v", err)
-		} else {
-			start = d
-		}
-	}
-	stack, _ := makeConfigNode(ctx)
-	defer stack.Close()
+// func checkStateContent(ctx *cli.Context) error {
+// 	var (
+// 		prefix []byte
+// 		start  []byte
+// 	)
+// 	if ctx.NArg() > 1 {
+// 		return fmt.Errorf("max 1 argument: %v", ctx.Command.ArgsUsage)
+// 	}
+// 	if ctx.NArg() > 0 {
+// 		if d, err := hexutil.Decode(ctx.Args().First()); err != nil {
+// 			return fmt.Errorf("failed to hex-decode 'start': %v", err)
+// 		} else {
+// 			start = d
+// 		}
+// 	}
+// 	stack, _ := makeConfigNode(ctx)
+// 	defer stack.Close()
 
-	db := utils.MakeChainDatabase(ctx, stack, true)
-	defer db.Close()
-	var (
-		it        = rawdb.NewKeyLengthIterator(db.NewIterator(prefix, start), 32)
-		hasher    = crypto.NewKeccakState()
-		got       = make([]byte, 32)
-		errs      int
-		count     int
-		startTime = time.Now()
-		lastLog   = time.Now()
-	)
-	for it.Next() {
-		count++
-		k := it.Key()
-		v := it.Value()
-		hasher.Reset()
-		hasher.Write(v)
-		hasher.Read(got)
-		if !bytes.Equal(k, got) {
-			errs++
-			fmt.Printf("Error at %#x\n", k)
-			fmt.Printf("  Hash:  %#x\n", got)
-			fmt.Printf("  Data:  %#x\n", v)
-		}
-		if time.Since(lastLog) > 8*time.Second {
-			log.Info("Iterating the database", "at", fmt.Sprintf("%#x", k), "elapsed", common.PrettyDuration(time.Since(startTime)))
-			lastLog = time.Now()
-		}
-	}
-	if err := it.Error(); err != nil {
-		return err
-	}
-	log.Info("Iterated the state content", "errors", errs, "items", count)
-	return nil
-}
+// 	db := utils.MakeChainDatabase(ctx, stack, true)
+// 	defer db.Close()
+// 	var (
+// 		it        = rawdb.NewKeyLengthIterator(db.NewIterator(prefix, start), 32)
+// 		hasher    = crypto.NewKeccakState()
+// 		got       = make([]byte, 32)
+// 		errs      int
+// 		count     int
+// 		startTime = time.Now()
+// 		lastLog   = time.Now()
+// 	)
+// 	for it.Next() {
+// 		count++
+// 		k := it.Key()
+// 		v := it.Value()
+// 		hasher.Reset()
+// 		hasher.Write(v)
+// 		hasher.Read(got)
+// 		if !bytes.Equal(k, got) {
+// 			errs++
+// 			fmt.Printf("Error at %#x\n", k)
+// 			fmt.Printf("  Hash:  %#x\n", got)
+// 			fmt.Printf("  Data:  %#x\n", v)
+// 		}
+// 		if time.Since(lastLog) > 8*time.Second {
+// 			log.Info("Iterating the database", "at", fmt.Sprintf("%#x", k), "elapsed", common.PrettyDuration(time.Since(startTime)))
+// 			lastLog = time.Now()
+// 		}
+// 	}
+// 	if err := it.Error(); err != nil {
+// 		return err
+// 	}
+// 	log.Info("Iterated the state content", "errors", errs, "items", count)
+// 	return nil
+// }
 
 func showLeveldbStats(db ethdb.KeyValueStater) {
 	if stats, err := db.Stat("leveldb.stats"); err != nil {
@@ -360,29 +358,29 @@ func dbStats(ctx *cli.Context) error {
 	db := utils.MakeChainDatabase(ctx, stack, true)
 	defer db.Close()
 
-	showLeveldbStats(db)
+	// showLeveldbStats(db)
 	return nil
 }
 
-func dbCompact(ctx *cli.Context) error {
-	stack, _ := makeConfigNode(ctx)
-	defer stack.Close()
+// func dbCompact(ctx *cli.Context) error {
+// 	stack, _ := makeConfigNode(ctx)
+// 	defer stack.Close()
 
-	db := utils.MakeChainDatabase(ctx, stack, false)
-	defer db.Close()
+// 	db := utils.MakeChainDatabase(ctx, stack, false)
+// 	defer db.Close()
 
-	log.Info("Stats before compaction")
-	showLeveldbStats(db)
+// 	log.Info("Stats before compaction")
+// 	showLeveldbStats(db)
 
-	log.Info("Triggering compaction")
-	if err := db.Compact(nil, nil); err != nil {
-		log.Info("Compact err", "error", err)
-		return err
-	}
-	log.Info("Stats after compaction")
-	showLeveldbStats(db)
-	return nil
-}
+// 	log.Info("Triggering compaction")
+// 	if err := db.Compact(nil, nil); err != nil {
+// 		log.Info("Compact err", "error", err)
+// 		return err
+// 	}
+// 	log.Info("Stats after compaction")
+// 	showLeveldbStats(db)
+// 	return nil
+// }
 
 // dbGet shows the value of a given database key
 func dbGet(ctx *cli.Context) error {
@@ -640,51 +638,51 @@ func (iter *snapshotIterator) Release() {
 }
 
 // chainExporters defines the export scheme for all exportable chain data.
-var chainExporters = map[string]func(db ethdb.Database) utils.ChainDataIterator{
-	"preimage": func(db ethdb.Database) utils.ChainDataIterator {
-		iter := db.NewIterator(rawdb.PreimagePrefix, nil)
-		return &preimageIterator{iter: iter}
-	},
-	"snapshot": func(db ethdb.Database) utils.ChainDataIterator {
-		account := db.NewIterator(rawdb.SnapshotAccountPrefix, nil)
-		storage := db.NewIterator(rawdb.SnapshotStoragePrefix, nil)
-		return &snapshotIterator{account: account, storage: storage}
-	},
-}
+// var chainExporters = map[string]func(db ethdb.Database) utils.ChainDataIterator{
+// 	"preimage": func(db ethdb.Database) utils.ChainDataIterator {
+// 		iter := db.NewIterator(rawdb.PreimagePrefix, nil)
+// 		return &preimageIterator{iter: iter}
+// 	},
+// 	"snapshot": func(db ethdb.Database) utils.ChainDataIterator {
+// 		account := db.NewIterator(rawdb.SnapshotAccountPrefix, nil)
+// 		storage := db.NewIterator(rawdb.SnapshotStoragePrefix, nil)
+// 		return &snapshotIterator{account: account, storage: storage}
+// 	},
+// }
 
-func exportChaindata(ctx *cli.Context) error {
-	if ctx.NArg() < 2 {
-		return fmt.Errorf("required arguments: %v", ctx.Command.ArgsUsage)
-	}
-	// Parse the required chain data type, make sure it's supported.
-	kind := ctx.Args().Get(0)
-	kind = strings.ToLower(strings.Trim(kind, " "))
-	exporter, ok := chainExporters[kind]
-	if !ok {
-		var kinds []string
-		for kind := range chainExporters {
-			kinds = append(kinds, kind)
-		}
-		return fmt.Errorf("invalid data type %s, supported types: %s", kind, strings.Join(kinds, ", "))
-	}
-	var (
-		stack, _  = makeConfigNode(ctx)
-		interrupt = make(chan os.Signal, 1)
-		stop      = make(chan struct{})
-	)
-	defer stack.Close()
-	signal.Notify(interrupt, syscall.SIGINT, syscall.SIGTERM)
-	defer signal.Stop(interrupt)
-	defer close(interrupt)
-	go func() {
-		if _, ok := <-interrupt; ok {
-			log.Info("Interrupted during db export, stopping at next batch")
-		}
-		close(stop)
-	}()
-	db := utils.MakeChainDatabase(ctx, stack, true)
-	return utils.ExportChaindata(ctx.Args().Get(1), kind, exporter(db), stop)
-}
+// func exportChaindata(ctx *cli.Context) error {
+// 	if ctx.NArg() < 2 {
+// 		return fmt.Errorf("required arguments: %v", ctx.Command.ArgsUsage)
+// 	}
+// 	// Parse the required chain data type, make sure it's supported.
+// 	kind := ctx.Args().Get(0)
+// 	kind = strings.ToLower(strings.Trim(kind, " "))
+// 	exporter, ok := chainExporters[kind]
+// 	if !ok {
+// 		var kinds []string
+// 		for kind := range chainExporters {
+// 			kinds = append(kinds, kind)
+// 		}
+// 		return fmt.Errorf("invalid data type %s, supported types: %s", kind, strings.Join(kinds, ", "))
+// 	}
+// 	var (
+// 		stack, _  = makeConfigNode(ctx)
+// 		interrupt = make(chan os.Signal, 1)
+// 		stop      = make(chan struct{})
+// 	)
+// 	defer stack.Close()
+// 	signal.Notify(interrupt, syscall.SIGINT, syscall.SIGTERM)
+// 	defer signal.Stop(interrupt)
+// 	defer close(interrupt)
+// 	go func() {
+// 		if _, ok := <-interrupt; ok {
+// 			log.Info("Interrupted during db export, stopping at next batch")
+// 		}
+// 		close(stop)
+// 	}()
+// 	db := utils.MakeChainDatabase(ctx, stack, true)
+// 	return utils.ExportChaindata(ctx.Args().Get(1), kind, exporter(db), stop)
+// }
 
 func showMetaData(ctx *cli.Context) error {
 	stack, _ := makeConfigNode(ctx)

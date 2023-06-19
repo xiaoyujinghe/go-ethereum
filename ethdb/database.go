@@ -60,11 +60,11 @@ type Compacter interface {
 type KeyValueStore interface {
 	KeyValueReader
 	KeyValueWriter
-	KeyValueStater
+	// KeyValueStater
 	Batcher
 	Iteratee
-	Compacter
-	Snapshotter
+	// Compacter
+	// Snapshotter
 	io.Closer
 }
 
@@ -184,8 +184,8 @@ type Database interface {
 	Writer
 	Batcher
 	Iteratee
-	Stater
-	Compacter
-	Snapshotter
+	// Stater
+	// Compacter
+	// Snapshotter
 	io.Closer
 }
